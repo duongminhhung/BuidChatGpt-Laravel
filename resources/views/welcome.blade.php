@@ -1,121 +1,43 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>ChatGPT Form</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-    <style>
-        * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-body {
-	background-color: #f2f2f2;
-}
+        <title>Laravel</title>
 
-.chat-container {
-	max-width: 600px;
-	margin: 50px auto;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	overflow: hidden;
-}
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="antialiased">
+        <div class="flex flex-col space-y-4 p-4">
+        @foreach($messages as $message)
+            <div class="flex rounded-lg p-4 @if ($message['role'] === 'assistant') bg-green-200 flex-reverse @else bg-blue-200 @endif ">
+                <div class="ml-4">
+                    <div class="text-lg">
+                        @if ($message['role'] === 'assistant')
+                            <a href="#" class="font-medium text-gray-900">LaravelGPT</a>
+                        @else
+                            <a href="#" class="font-medium text-gray-900">You</a>
+                        @endif
+                    </div>
+                    <div class="mt-1">
+                        <p class="text-gray-600">
+                            {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+        </div>
 
-.chat-header {
-	background-color: #4267b2;
-	color: #fff;
-	padding: 10px;
-}
-
-.chat-header h3 {
-	margin: 0;
-}
-
-.chat-box {
-	height: 300px;
-	overflow-y: scroll;
-	padding: 10px;
-}
-
-.chat-message {
-	margin-bottom: 10px;
-}
-
-.chat-bot {
-	background-color: #e6e6e6;
-	text-align: left;
-	padding: 10px;
-	border-radius: 5px 5px 5px 0px;
-}
-
-.chat-user {
-	background-color: #4267b2;
-	color: #fff;
-	text-align: right;
-	padding: 10px;
-	border-radius: 5px 5px 0px 5px;
-}
-
-.chat-user p, .chat-bot p {
-	margin: 0;
-}
-
-.chat-input {
-	padding: 10px;
-	background-color: #fff;
-}
-
-.chat-input form {
-	display: flex;
-}
-
-.chat-input input[type="text"] {
-	flex-grow: 1;
-	padding: 10px;
-	border: none;
-	border-radius: 5px 0px 0px 5px;
-}
-
-.chat-input button[type="submit"] {
-	background-color: #4267b2;
-	color: #fff;
-	border: none;
-	padding: 10px 20px;
-	border-radius: 0px 5px 5px 0px;
-	cursor: pointer;
-}
-
-.chat-input input[type="text"]:focus {
-	outline: none;
-}
-
-.chat-input button[type="submit"]:hover {
-	background-color: #1a294a;
-}
-
-    </style>
-</head>
-<body>
-	<div class="chat-container">
-		<div class="chat-header">
-			<h3>Chat with ChatGPT</h3>
-		</div>
-		<div class="chat-box">
-			<div class="chat-message chat-bot">
-				<p>Hello! How can I assist you today?</p>
-			</div>
-			<div class="chat-message chat-user">
-				<p>Hi! I need help with my account.</p>
-			</div>
-		</div>
-		<div class="chat-input">
-			<form action="{{ route('submit') }}" method="post">
-                @csrf
-				<input type="text" placeholder="Type your message...">
-				<button type="submit">Send</button>
-			</form>
-		</div>
-	</div>
-</body>
+        <form class="p-4 flex space-x-4 justify-center items-center" action="/" method="post">
+            @csrf
+            <label for="message">Laravel Question:</label>
+            <input id="message" type="text" name="message" autocomplete="off" class="border rounded-md  p-2 flex-1" />
+            <a class="bg-gray-800 text-white p-2 rounded-md" href="/reset">Reset Conversation</a>
+        </form>
+    </body>
 </html>
